@@ -1,7 +1,8 @@
-function CCEP_offon_collect_multi(Sbj_Metadatas)
+function CCEP_offon_collect_multi_v2(Sbj_Metadatas)
 % Based on CCEP_offon_collect; to collect and see what changes in what percentages
 % in CCEP N1 and N2 latencies and amplitudes in which direction based on
 % stimulation and recording electrode character.
+% v2: removes channels that are in WM.
 
 comb_sbjIDs = '';
 chan_count = 0;
@@ -84,14 +85,15 @@ if ~isempty(bad_analyzed_chans)
 warning('%s: these channels are pairs as bad, but analyses were run nevertheless, removing from here.',strjoin(bad_analyzed_chans,','))
 end
 bad_analyzed_chans_all = [bad_analyzed_chans_all;bad_analyzed_chans];
-% analyzed_chans = analyzed_chans(~bad_analyzed_chans_idx);
+analyzed_chans = analyzed_chans(~bad_analyzed_chans_idx);
 analyzed_chans_all = [analyzed_chans_all;analyzed_chans];
-% analyzed_chans_character = analyzed_chans_character(~bad_analyzed_chans_idx);
+analyzed_chans_character = analyzed_chans_character(~bad_analyzed_chans_idx);
 analyzed_chans_character_all = [analyzed_chans_character_all;analyzed_chans_character];
 analyzed_chans_split = strsplit_SA(analyzed_chans);
 
 %% create criss-cross
-% loop stim elec based on their seizure character
+% loop stimulation elec based on their seizure character
+corrSheet = readtable(Sbj_Metadata.labelfile);
 for c = 1:length(analyzed_chans)
 
     % load CCEP_comp_offon stat output
@@ -101,6 +103,10 @@ for c = 1:length(analyzed_chans)
     % remove stimulation channels
     peak_info_spl = strsplit_SA(peak_info.label);
     peak_info = peak_info(~any(ismember(peak_info_spl,analyzed_chans_split(c,:)),2),:);
+    peak_info_spl = strsplit_SA(peak_info.label);
+    % remove non-gray channels
+    peakinfo_chan_WMvsGM = assign_classes(peak_info_spl(:,1), peak_info_spl(:,2), corrSheet.Label, lower(corrSheet.WMvsGM),{'gray','white','csf','skull'});
+    peak_info = peak_info(~strcmp(peakinfo_chan_WMvsGM,'gray'),:);
     peak_info_spl = strsplit_SA(peak_info.label);
 
     % find classes for recording channels
@@ -119,7 +125,10 @@ for c = 1:length(analyzed_chans)
 
 end
 
+
 end
+
+
 N1_time_percs=[];
 N1_amp_percs=[];
 N2_time_percs=[];
@@ -216,7 +225,7 @@ title('...N2-amplitude')
 sgtitle('Percentage of electrodes with significant change in...')
 
 % save directory
-res_dir=fullfile(Sbj_Metadata.project_root,'COMBINED_RESULTS','offon_collect_multi');
+res_dir=fullfile(Sbj_Metadata.project_root,'COMBINED_RESULTS','offon_collect_multi_v2');
 if ~isfolder(res_dir); mkdir(res_dir); end
 
 print(fullfile(res_dir,[comb_sbjIDs '_offon_all.png']),'-dpng','-r300')
