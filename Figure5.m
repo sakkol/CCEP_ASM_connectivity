@@ -5,19 +5,17 @@
 
 data_root = fullfile(cd,'neural_data');
 project_name = 'CCEP_PrePost';
+sbj_IDs = {'P2', 'P4', 'P5', 'P6', 'P7'};
+savedir = fullfile(cd,'Figures');
+if ~isfolder(savedir), mkdir(savedir); end
 
-% visualize across participants
-results_array={[],[]};
-sbj_ID = 'P2';
-Sbj_Metadata = makeSbj_Metadata(data_root, project_name, sbj_ID); % 'SAkkol_Stanford'
-xx=load(fullfile(Sbj_Metadata.results,'corr_matrix',[Sbj_Metadata.sbj_ID, '_graphMetrics.mat']),'results');
-results_array{1}=xx.results;
-sbj_ID = 'P4';
-Sbj_Metadata = makeSbj_Metadata(data_root, project_name, sbj_ID); % 'SAkkol_Stanford'
-xx=load(fullfile(Sbj_Metadata.results,'corr_matrix',[Sbj_Metadata.sbj_ID, '_graphMetrics.mat']),'results');
-results_array{2}=xx.results;
-
-patient_ids = {'P2','P4'};
+% collect participant data
+results_array={};
+for s = 1:length(sbj_IDs)
+    sbj_ID = sbj_IDs{s};
+    xx=load(fullfile(Sbj_Metadata.results,'corr_matrix',[Sbj_Metadata.sbj_ID, '_graphMetrics.mat']),'results');
+    results_array{s}=xx.results;
+end
 
 % Extract data from all participants
 n_participants = length(results_array);
@@ -60,7 +58,6 @@ end
 
 %% Create the figure
 fig = figure('Units','normalized','Position', [0 0.05  1 .9]);
-% sgtitle('Network Measures Comparison (ASM-ON vs ASM-OFF)', 'FontWeight', 'bold');
 
 % Create color map: Orange for on-med; Purple for off-med
 offmed_color = [0.5128 0.0191 0.6551]; % purple
@@ -149,7 +146,7 @@ for m = 1:length(measures)
         % h(ii).Color = 'k';
         xxx(ii).LineWidth=1;
         xxx(ii).LineStyle='-';
-        if ii>4,continue,end
+        if ii>(n_participants*2),continue,end
         plot(mean(get(xxx(ii),'XData')),mean(get(xxx(ii),'YData')),'diamond','Color',get(xxx(ii),'Color'),'LineWidth',6)
     end
 
@@ -182,7 +179,7 @@ for m = 1:length(measures)
     xticks(xtick_positions);
     xticklabels(xtick_labels);
     % xtickangle(45);
-    xlim([0.5 5.5])
+    xlim([xtick_positions(1)-1 xtick_positions(end)+1])
     
     % Set a common height limit across all subplots for consistent appearance
     box on;
@@ -212,6 +209,5 @@ tight_spacing = 0.1;
 tight_subplot_dimensions = [tight_spacing, tight_spacing, tight_spacing, tight_spacing];
 set(fig, 'DefaultAxesLooseInset', tight_subplot_dimensions);
 
-% save figure
-savedir = fullfile(cd,'Figures');
-print(fullfile(savedir,['Figure5_GraphMeasures_' char(datetime('today','Format','uuuu-MM-dd')) '.png']),'-dpng','-r300')
+
+print(fullfile(savedir,'Fig5_GraphMeasures.png'),'-dpng','-r300')

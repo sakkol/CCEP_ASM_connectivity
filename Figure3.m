@@ -1,14 +1,15 @@
-% Figure 3 for channel based functional connectviity comparison
-
+% Fig3 for channel based func conn comparison
 data_root = fullfile(cd,'neural_data');
 project_name = 'CCEP_PrePost';
+sbj_IDs = {'P2', 'P4', 'P5', 'P6', 'P7'};
 
-figure('position',[0 0 1800 750])
-for s = 1:2
-    if s==1, sbj_ID = 'P2';
-    elseif s==2, sbj_ID = 'P4';
-    end
-    subplot(1,2,s)
+savedir = fullfile(cd,'Figures');
+if ~isfolder(savedir), mkdir(savedir); end
+prt='Total counts from ASM-ON - ASM-OFF\n';
+
+for s = 1:length(sbj_IDs)
+figure('position',[0 0 1200 1200])
+    sbj_ID = sbj_IDs{s};
 
     Sbj_Metadata = makeSbj_Metadata(data_root, project_name, sbj_ID); % 'SAkkol_Stanford'
     load(fullfile(Sbj_Metadata.results,'corr_matrix',[Sbj_Metadata.sbj_ID, '_corr_perm.mat']),'p_values','significant_pairs')
@@ -69,13 +70,19 @@ for s = 1:2
     set(gca,'XTick',[]);
     set(gca,'YTick',[]);
 
-end
-
 set(gcf,'Color','w')
 set(gcf, 'InvertHardcopy', 'off')
-savedir = fullfile(cd,'Figures');
-print(fullfile(savedir,['Figure3_' char(datetime('today','Format','uuuu-MM-dd')) '.png']),'-dpng','-r300')
+print(fullfile(savedir,['Fig3_v3_1' sbj_ID '.png']),'-dpng','-r300')
 
+    % count things
+    prt=[prt,sbj_ID,': Number of FC pairs: ',num2str(size(r,1)*(size(r,1)-1)/2) '; #decreased FC: ' num2str(sum(r>0,'all')) '; #increased FC: ' num2str(sum(r<0,'all')) ...
+        '; percent decreased: ' num2str(sum(r>0,'all')/(size(r,1)*(size(r,1)-1)/2)) '; percent increased: ' num2str(sum(r<0,'all')/(size(r,1)*(size(r,1)-1)/2)) '\n'];
+
+end
+
+fileID = fopen(fullfile(savedir,'percentages_offon_all.txt'),'w');
+fprintf(fileID,prt);
+fclose(fileID);
 
 %% Add colormap
 
@@ -103,4 +110,4 @@ set(gca,'Visible','off')
 set(gcf,'color','w')
 set(gcf, 'InvertHardcopy', 'off') % to set saving white color as white
 
-print(fullfile(savedir,['Figure3_colorbar_' char(datetime('today','Format','uuuu-MM-dd'))]),'-dpng','-r300')
+print(fullfile(savedir,[char(datetime('today','Format','uuuu-MM-dd')) '_colorbar_vertical_v3.png']),'-dpng','-r300')
