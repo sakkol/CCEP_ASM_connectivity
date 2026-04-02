@@ -3,11 +3,10 @@
 
 data_root = fullfile(cd,'neural_data');
 project_name = 'CCEP_PrePost';
+sbj_IDs = {'P2', 'P4', 'P5', 'P6', 'P7'};
 
-for subj = 1:2
-    if subj==1, sbj_ID = 'P2';
-    elseif subj==2, sbj_ID = 'P4';
-    end
+for s = 1:length(sbj_IDs)
+    sbj_ID = sbj_IDs{s};
     Sbj_Metadata = makeSbj_Metadata(data_root, project_name, sbj_ID);
 
     %% Calculate HFB and slow fluctuations; save channels individually

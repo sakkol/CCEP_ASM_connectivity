@@ -5,7 +5,7 @@
 %% Main loop to create folder structure and folder metadata
 data_root = fullfile(cd,'neural_data');
 project_name = 'CCEP_PrePost';
-sbj_IDs = {'P1', 'P2', 'P3','P4'};
+sbj_IDs = {'P1', 'P2', 'P3', 'P4', 'P7'};
 Sbj_Metadatas = cell(size(sbj_IDs));
 for s = 1:length(sbj_IDs)
     sbj_ID = sbj_IDs{s};
@@ -63,12 +63,12 @@ end
 
 %% CCEP_offon_collect_multi
 % to run multiple patients' data together for comparing N1/N2 amplitude and latency.
-CCEP_offon_collect_multi(Sbj_Metadatas)
+CCEP_offon_collect_multi_v2(Sbj_Metadatas)
 
 %% CCEP_offon_collect_drectns_multi 
 % to run multiple patients' data together to compare the directions of N1/N2 related changes.
-CCEP_offon_collect_drectns_multi(Sbj_Metadatas)
+CCEP_offon_collect_drectns_perm(Sbj_Metadatas)
 
 %% CCEP_offon_RMS_multi
 % to run multiple patients' data together for RMS comparison.
-CCEP_offon_RMS_multi(Sbj_Metadatas)
+CCEP_offon_RMS_multi_v2(Sbj_Metadatas)
