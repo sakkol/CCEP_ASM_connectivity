@@ -3,7 +3,7 @@
 % Run this script where the "neural_data" folder is. 
 
 %% Main loop to create folder structure and folder metadata
-data_root = fullfile(cd,'neural_data');
+data_root = fullfile(cd,'data');
 project_name = 'CCEP_PrePost';
 sbj_IDs = {'P1', 'P2', 'P3', 'P4', 'P7'};
 Sbj_Metadatas = cell(size(sbj_IDs));

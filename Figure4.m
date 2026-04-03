@@ -1,6 +1,6 @@
 % Figure 4: to plot the connectivity fingerprints on vs off ASM during rest
 % sessions
-data_root = fullfile(cd,'neural_data');
+data_root = fullfile(cd,'data');
 project_name = 'CCEP_PrePost';
 sbj_IDs = {'P2', 'P4', 'P5', 'P6', 'P7'};
 savedir = fullfile(cd,'Figures');

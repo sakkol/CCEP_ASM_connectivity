@@ -1,7 +1,7 @@
 %% Preprocessing the BHA from the average data and correlating between each 
 % channel to obtain functional connectivity matrices
 
-data_root = fullfile(cd,'neural_data');
+data_root = fullfile(cd,'data');
 project_name = 'CCEP_PrePost';
 sbj_IDs = {'P2', 'P4', 'P5', 'P6', 'P7'};
 

@@ -1,5 +1,5 @@
 % Fig3 for channel based func conn comparison
-data_root = fullfile(cd,'neural_data');
+data_root = fullfile(cd,'data');
 project_name = 'CCEP_PrePost';
 sbj_IDs = {'P2', 'P4', 'P5', 'P6', 'P7'};
 

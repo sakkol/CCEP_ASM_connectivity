@@ -3,7 +3,7 @@
 % This creates a 2x4 grid of subplots comparing ON vs OFF states for
 % multiple network measures. Each subplot contains individual boxplots for each participant.
 
-data_root = fullfile(cd,'neural_data');
+data_root = fullfile(cd,'data');
 project_name = 'CCEP_PrePost';
 sbj_IDs = {'P2', 'P4', 'P5', 'P6', 'P7'};
 savedir = fullfile(cd,'Figures');
